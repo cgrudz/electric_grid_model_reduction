@@ -55,6 +55,11 @@ the pair of nodes defining an edge, of the reduction.  Associated to the field i
 All subroutines are listed in this directory and are commented in the code.  Drivers in the main directory call these to perform the actual 
 reductions.
 
+## Visualizations
+
+Example code for visualizations are included and can be run in a web browser directly at my 
+[research page](https://cgrudz.github.io/research/).
+
 ## License
 
 This project is licensed under the MIT License - see the [License.md](https://github.com/cgrudz/electric_grid_model_reduction/blob/master/LICENSE) file for details
