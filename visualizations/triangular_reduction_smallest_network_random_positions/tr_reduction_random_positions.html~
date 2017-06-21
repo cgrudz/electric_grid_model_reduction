@@ -1,0 +1,436 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF8">
+  <title> tr_reduction_random_positions </title>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.7.0/vis.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.7.0/vis.min.css">
+  <link type="text/css" rel="stylesheet" href="visualization.css">  
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+  <script src="1000_kv_deg_8.js"></script>
+  
+</head>
+
+<body >
+<div style="font-family: Arial;">
+    <h1 class="centered"> Greedy triangular reduction:<br> 
+    no voltage threshold, degree threshold 8, random positions </h1>
+    <div style="margin-left:5%; margin-right:5%;">                 
+        <h2> Description of Reduction: </h2>
+        <p> 
+        This is the visualization of the greedy triangular reduction performed to the degree two reduced network.  We plot the
+        smallest network produced in the experiment, under the degree threshold of 8 and without a voltage threshold for the 
+        permissible triangles.  Initial positions in the visualization are randomly laid out.  When the
+        model is enabled, nodes are repelled from each other, but held together by springs (the edges between them).  
+        For a detailed description of the reduction process see our manuscript linked here. 
+        </p>
+        <h2> Graph Labels: </h2>
+        <p>
+            <ul style="text-align:left;">
+                <li> <b>Coloring:</b> 
+                nodes and edges are given color coding according the the highest voltage node included in this reduction.
+                Edges without reduction share the color coding of their associated nodes.
+                </li>                
+                <li >
+                <b> Numbering:</b> nodes are labelled with their associated node number in the randomly numbered, 53,155 node
+                network.
+                </li>  
+                <li>
+                <b> Generators:</b> Generators are labelled with the "* MW" where * is number of megawatts for the generator.
+                </li>                
+                <li><b> Super Nodes:</b>
+                Trees and triangles list the node number of the terminal node, the number of nodes in the
+                reduction as "B**" where ** is the number of buses.  The number of buses that are generators in the reduction are listed as "G***"
+                where *** is the number of generators.  If there are generators, the total megawatts of generation over all generators in the node "* MW"
+                where * is the sum of the megawatts for each generator.
+                </li>
+                <li><b> Meta-edges:</b>
+                Meta-edges are labelled with E[B**,G*** *MW], with the same convention as above.
+                </li>
+            </ul>        
+        </p>
+   </div>
+</div>
+<div style="height:100%; width:100%; position:absolute; font-family: Arial;">
+    <div id="mynetwork"></div>
+    <div id="config_box" style="float:left; margin-left:5%; width:500px;"> </div>
+    <div style="float:right; margin-right:5%; margin-top:50px;">
+    <table class="vis_key">
+        <thead>
+            <tr>
+                <th colspan="7"> <h3 class="centered">Visualization Key</h3></th>
+            </tr>
+        </thead>        
+        <tr>
+            <td colspan="7" > <h4>Colors:</h4> </td> 
+        </tr>                    
+        <tr>
+            <td > 
+                <div class="color_bubble" style="background-color: #00FFFF;"></div>
+                <div class="text_bubble"> KV < 115 </div>
+            </td>
+            <td > 
+                <div class="color_bubble" style="background-color: #FF00FF;"></div>
+                <div class="text_bubble"> 115<= KV <138 </div>
+            </td>
+            <td > 
+                <div class="color_bubble" style="background-color: #000080;"></div>
+                <div class="text_bubble"> 138<= KV <230 </div>
+            </td>
+            <td > 
+                <div class="color_bubble" style="background-color: #00B200;"></div>
+                <div class="text_bubble"> 230<= KV <345 </div>
+            </td>
+            <td > 
+                <div class="color_bubble" style="background-color: #FF8C00;"></div>
+               <div class="text_bubble"> 345<= KV <500 </div>
+            </td>
+            <td >             
+                <div class="color_bubble" style="background-color: #FF0000;"></div>
+                <div class="text_bubble"> 500<= KV  </div>                   
+            </td>
+            <td > 
+                <div class="color_bubble" style="background-color: #800000;"></div>
+                <div class="text_bubble"> Generator </div>      
+            </td>            
+        </tr>
+        <tr>
+            <td > <h4>Node Symbols: </h4></td>
+            <td > <i class="ion-network" id="network" ></i> </td>
+            <td colspan="2" > Terminal node collapsed tree </td>             
+            <td > <font size="70"><i class="ion-android-arrow-dropup-circle" id="tri"></i> </font></td>
+            <td colspan="2" > Terminal node collapsed triangle </td>
+        </tr>
+        <tr>
+            <td > <h4>Edge Symbols:</h4> </td>
+            <td > <i class="ion-navigate" id="navigate" > </i> </td>
+            <td colspan= "5"> 
+                Edges with an arrow denote a meta-edge.                                                                   
+            </td>
+        </tr>
+    </table>    
+    
+    </div>
+    <div style="margin-top:10px; margin-right:5%; margin-bottom:50px; margin-left: 5%; float:left; clear: both;">
+        <h2> Description of Visualization Model: </h2>
+        <p>
+        The x and y coordinates for nodes in the network are distributed initially with a random seed upon each load of
+        the page.  The evolution of the nodes is governed by a repulsion attraction model in which nodes repulse and edges
+        attract. Physics model for the visualization is set by default to the 
+        <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0098679"> ForceAtlas2 Model </a>
+        and the solver is based partially on the equations provided in the model and the Barnes-Hut algorithm for n-body
+        problems.  A full description of the physics options is found in the 
+        <a href="http://visjs.org/docs/network/physics.html#">Vis.js documentation</a>, and summaries of the
+        parameters are provided below. <b>Note: the physics can be enabled or disabled with the button in the parameter
+        slider</b>
+        </p>
+        <table>
+            <th colspan="2"> <h3> Parameter Descriptions </h3> </th>
+            <tr>
+            <td> gravitationalConstant </td> 
+            <td> 
+            This represents the gravitational constant for the attraction/ repulsion between nodes; 
+            the nodes are intended to repulse, so the constant is negative and if you want the repulsion to be stronger, 
+            decrease the value.
+            </td>
+            </tr>
+            <tr>
+            <td> centralGravity </td>
+            <td> 
+            This parameter affects the strength of the central attractor for the system - when turned on, the
+            gravity will pull the entire network towards the center with the same force irrespective of the distance
+            from the center.
+            </td>
+            </tr>
+            <tr>
+            <td> springLength </td>
+            <td> This parameter describes the rest length of the springs.</td>
+            </tr>
+            <tr>
+            <td> springConstant </td>
+            <td> This is a measure of spring stiffness, with higher values meaning stiffer springs </td>
+            </tr>
+            <tr>
+            <td> damping </td>
+            <td> 
+            The damping factor is how much of the velocity from the previous iteration of the physics simulation 
+            carries over to the next iteration.
+            </td>
+            <tr>
+            <td> avoidOverlap </td>
+            <td> 
+            When larger than 0, the size of the node is taken into account. The distance will be calculated from 
+            the radius of the encompassing circle of the node for both the gravity model. Value 1 is maximum overlap 
+            avoidance.
+            </td>
+            </tr>
+            <tr>
+            <td> maximumVelocity </td>
+            <td>
+            This limits the velocity the nodes can achieve in the simulation and slows down the stabilization of the model
+            </td>
+            </tr>
+            <tr>
+            <td> minimumVelocity </td>
+            <td> 
+            This sets the threshold velocity that, if all nodes in the network fall under, the network is considered
+            stabilized and the model stops.
+            </td>
+            </tr>
+            <tr>
+            <td> solver </td>
+            <td> 
+            The solver is set by default to the forceAtlas2 model and in principle can be changed, but it is better 
+            to change the model for a fresh run within the options of the scripts.
+            </td>
+            </tr>
+            <tr>
+            <td> timeStep </td>
+            <td> 
+            This sets the time step for the discretization of the physics; if it is too large the simulation will
+            become unstable.
+            </td>
+            </tr>
+        </table>
+    </div>
+    <div style="position: relative; clear: both;" class="centered" >
+        <h4> 
+        This visualization is performed in <a href="http://visjs.org">Vis.js</a> Copyright (C) 2010-2017 Almende B.V., 
+        dual licensed under Apache 2.0 and MIT
+        </h4>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+  var network;
+  
+  var config_box = document.getElementById('config_box')
+  var container = document.getElementById('mynetwork');
+  
+  var data = {
+      nodes: nodes,
+      edges: edges
+    };
+ 
+  var options = {      
+      nodes: {
+        shape: 'dot',
+        scaling: {
+          min: 10,
+          max: 30
+        },
+        font: {
+          size: 100,
+          face: 'Tahoma'
+        }
+      },
+      edges: {
+        width: 0.15,
+        color: {inherit: 'from'},
+        smooth: {
+          type: 'continuous'
+        }
+      },
+      physics: {
+        enabled: false,
+        forceAtlas2Based: {
+          gravitationalConstant: -3500,
+          centralGravity: 0,
+          springLength: 2000,
+          springConstant: 2.0,
+          damping: .05
+          },
+        maxVelocity: 400,
+        solver: 'forceAtlas2Based',
+        timestep: 0.35,
+        stabilization: {iterations:300}
+        },
+      configure: { 
+        enabled: true,
+        filter: 'physics',
+        showButton: false,
+        container: config_box
+        },
+      interaction: {
+        tooltipDelay: 200,
+        hideEdgesOnDrag: false
+      },
+      layout: {
+        randomSeed: undefined,
+        hierarchical: {
+          enabled:false,
+          levelSeparation: 150,
+          direction: 'UD',   // UD, DU, LR, RL
+          sortMethod: 'hubsize' // hubsize, directed
+            }
+          },
+      groups: {
+          'tri1': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf341',
+              size: 300,
+              color: '#00FFFF',
+              }
+            },
+          'tri2': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf364',
+              size: 300,
+              color: '#FF00FF',
+              }
+            },
+          'tri3': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf364',
+              size: 350,
+              color: '#000080',
+              }
+            },
+          'tri4': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf364',
+              size: 350,
+              color: '#00B200',
+              }
+            },
+          'tri5': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf364',
+              size: 400,
+              color: '#FF8C00',
+              }
+            },
+          'tri6': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf364',
+              size: 600,
+              color: '#FF0000',
+              }
+            },
+            'gtri': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf364',
+              size: 600,
+              color:'#800000'
+            }
+          },
+          'tree1': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf341',
+              size: 300,
+              color: '#00FFFF',
+              }
+            },
+          'tree2': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf341',
+              size: 300,
+              color: '#FF00FF',
+              }
+            },
+          'tree3': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf341',
+              size: 350,
+              color: '#000080',
+              }
+            },
+          'tree4': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf341',
+              size: 350,
+              color: '#00B200',
+              }
+            },
+          'tree5': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf341',
+              size: 400,
+              color: '#FF8C00',
+              }
+            },
+          'tree6': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf341',
+              size: 600,
+              color: '#FF0000',
+              }
+            },
+          'gTree': {
+            shape: 'icon',
+            icon: {
+              face: 'Ionicons',
+              code: '\uf341',
+              size: 600,
+              color: '#800000'            
+              }
+            },
+          'bus1': {
+            size: 10,
+            color: '#00FFFF',
+            }, 
+          'bus2': {
+            size: 20,
+            color: '#FF00FF',
+            },
+          'bus3': {
+            size: 60,
+            color: '#000080',
+            },
+          'bus4': {
+            size: 100,
+            color: '#00B200',
+            },
+          'bus5': {
+            size: 140,
+            color: '#FF8C00',
+            },
+          'bus6': {
+            size: 180,
+            color: '#FF0000',
+            },
+          'gen' : {
+            size: 180,
+            color: '#800000',
+            },
+          }
+   };
+
+  network = new vis.Network(container, data, options);
+
+  redraw()
+  
+</script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+html, body {
+    height: 100%;
+    margin: 0px;
+    }
+table, th, td {
+    border: 1px solid black;
+    }
+table.vis_key  td{
+    width: 70px;
+    text-align: center;
+    vertical-align: middle;
+    margin: auto;    
+    border: 1px solid black;
+    }
+
+.centered {
+    text-align: center;
+    vertical-align: middle;
+    margin: auto;
+    }
+
+.color_bubble {
+    border-radius: 100%;
+    border: 1px solid inherit;
+    display: block;
+    width:60px;
+    height:60px;
+    margin: auto;
+    position:relative;
+    }
+.text_bubble {
+	 font-size: 10px;  
+    width: 80px;
+    text-align: center;
+    vertical-align: middle;
+    margin: auto;    
+    clear: both;
+    }
+#mynetwork {
+    width: 90%;
+    height: 90%;
+    border: 1px solid lightgray;
+    position: relative;
+    margin-left: 5%;
+    margin-right: 5%;
+    }
+#gen_bubble {
+    background-color: red;
+    border-radius: 100%;
+    border: 1px solid red;
+    display: block;
+    width:70px;
+    height:70px;
+    margin: auto;
+    }
+#no_gen_bubble {
+    background-color: blue;
+    border-radius: 100%;
+    border: 1px solid blue;
+    display: block;
+    width:70px;
+    height:70px;
+    margin: auto;
+    }
+#network {
+    font-size: 50px;
+    }
+#island {
+    font-size: 50px;
+    }
+#navigate {
+    font-size: 50px;
+    }
