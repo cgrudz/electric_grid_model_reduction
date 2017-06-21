@@ -25,15 +25,35 @@ All .m files in the main directory of the type 'driver' will run different steps
 
 ## Toy Data 
 
-Information on the data sets.
+Toy data can be found in the 'processed_data' directory.  The 'full_network_toy_data.mat' contains a sparse connectivity 
+matrix for the full case 
+study network where the nodes are randomly numbered and identified with its row/ column in this matrix.  The 'gen_nums' is an array containing 
+the the associated node numbers where generators are located. The per unit nominal KV and per unit megawatts of generation are included in the
+remaining structs in this .mat file.  The fields in these structs are given in the form 'b\*' or 'g\*' where \* is the node number.
 
-```
-Give an example
-```
+The 'd1_d2_tree_edge_data.mat' contains the connectivity matrices and the hash tables for the reductions of each of the degree one and degree
+two reductions of the full network.  The connectivity matrices in this case are represented simply by a list of all nodes, descending order in
+ the rows, with the column entry corresponding to a connected node.  This format can be mapped into the matlab sparse matrix format, but was
+ used for convenient sorting in the algorithms.  The hash tables are structured as described in the appendix of the manuscript.  However,
+the degree two hash table only contains the mappings from the degree two reduction.
+
+The 'd1_d2_unstructured_reduction_data_structs.mat' includes hash tables with unstructured lists of all nodes contained in trees and edges in 
+the degree one and degree two reductions.  In constrast to the structured data above, the hash table of unstructured degree two reductions also
+includes the degree one reductions in this list.
+
+The 'tr_red_no_kv_thresh_degthresh_8.mat' contains the connectivity matrix of the smallest triangle reduced network without a voltage threshold
+ and with a degree threshold of 8.  Additionally, this contains the reduction hash table (described in the manuscript) as well as the
+unstructured reduction hash table, containing the location of all nodes under mappings in the degree one, degree two and triangle reductions.
+Likewise, we include the hash table of all generator locations.  For every field in the generator hash table is listed by the terminal node, or
+the pair of nodes defining an edge, of the reduction.  Associated to the field is the list of generator numbers as given in the list in 
+'full_network_toy_data.mat'.  We prepend each super node as with the other reductions, indicating if it is a tree or triangle, and seperately
+ with 'g\*' if this is only the generator itself. 
+
 
 ## Functions
 
-Information on the subroutines
+All subroutines are listed in this directory and are commented in the code.  Drivers in the main directory call these to perform the actual 
+reductions.
 
 ## License
 
