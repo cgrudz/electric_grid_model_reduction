@@ -37,5 +37,5 @@ Information on the subroutines
 
 ## License
 
-This project is licensed under the MIT License - see the [https://github.com/cgrudz/electric_grid_model_reduction/blob/master/LICENSE](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [License.md](https://github.com/cgrudz/electric_grid_model_reduction/blob/master/LICENSE) file for details
 
